@@ -1,7 +1,9 @@
 import React, { useEffect, useState } from "react";
 import { Link, useLocation } from "react-router-dom";
-import { ShoppingBag, Search, Menu, X } from "lucide-react";
-import { useCart } from "../context/CartContext";
+import { ShoppingBag, Search, Menu, X, User } from "lucide-react";
+import { useCartStore } from "../store/cartStore";
+import { useAuth } from "../context/AuthContext";
+import AuthModal from "./AuthModal";
 
 const links = [
   { label: "Shop All", to: "/shop" },
@@ -11,7 +13,9 @@ const links = [
 ];
 
 export default function Navbar() {
-  const { count, setOpen } = useCart();
+  const { count, setOpen } = useCartStore();
+  const { user, signOut } = useAuth();
+  const [authModalOpen, setAuthModalOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
   const [menu, setMenu] = useState(false);
   const location = useLocation();
@@ -24,6 +28,17 @@ export default function Navbar() {
   }, []);
 
   useEffect(() => setMenu(false), [location]);
+
+  useEffect(() => {
+    if (menu) {
+      document.body.style.overflow = "hidden";
+    } else {
+      document.body.style.overflow = "";
+    }
+    return () => {
+      document.body.style.overflow = "";
+    };
+  }, [menu]);
 
   return (
     <header
@@ -52,8 +67,9 @@ export default function Navbar() {
           onClick={() => setMenu((m) => !m)}
           className="flex-1 md:hidden"
           aria-label="Menu"
+          aria-expanded={menu}
         >
-          {menu ? <X size={22} /> : <Menu size={22} />}
+          {menu ? <X size={22} aria-hidden="true" /> : <Menu size={22} aria-hidden="true" />}
         </button>
 
         {/* Logo */}
@@ -64,15 +80,26 @@ export default function Navbar() {
         {/* Right */}
         <div className="flex flex-1 items-center justify-end gap-5">
           <button data-testid="search-btn" aria-label="Search" className="hidden sm:block">
-            <Search size={19} strokeWidth={1.6} />
+            <Search size={19} strokeWidth={1.6} aria-hidden="true" />
           </button>
+          
+          {user ? (
+            <button onClick={signOut} aria-label="Sign Out" className="hidden sm:block hover:opacity-50">
+              <User size={19} strokeWidth={1.6} aria-hidden="true" className="text-blue-500" />
+            </button>
+          ) : (
+            <button onClick={() => setAuthModalOpen(true)} aria-label="Sign In" className="hidden sm:block">
+              <User size={19} strokeWidth={1.6} aria-hidden="true" />
+            </button>
+          )}
+
           <button
             data-testid="cart-toggle"
             onClick={() => setOpen(true)}
             className="relative"
             aria-label="Cart"
           >
-            <ShoppingBag size={19} strokeWidth={1.6} />
+            <ShoppingBag size={19} strokeWidth={1.6} aria-hidden="true" />
             {count > 0 && (
               <span
                 data-testid="cart-count"
@@ -97,8 +124,19 @@ export default function Navbar() {
               {l.label}
             </Link>
           ))}
+          {user ? (
+            <button onClick={signOut} className="block py-3 font-serif text-3xl text-left w-full text-blue-500">
+              Sign Out
+            </button>
+          ) : (
+            <button onClick={() => { setAuthModalOpen(true); setMenu(false); }} className="block py-3 font-serif text-3xl text-left w-full">
+              Sign In
+            </button>
+          )}
         </div>
       )}
+
+      <AuthModal isOpen={authModalOpen} onClose={() => setAuthModalOpen(false)} />
     </header>
   );
 }

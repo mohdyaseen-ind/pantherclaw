@@ -1,32 +1,48 @@
-import React from "react";
+import React, { useEffect, useRef } from "react";
 import { AnimatePresence, motion } from "framer-motion";
-import { X, Minus, Plus } from "lucide-react";
-import { useCart } from "../context/CartContext";
+import { useNavigate } from "react-router-dom";
+import { X, Minus, Plus, ShoppingBag } from "lucide-react";
+import { useCartStore } from "../store/cartStore";
 import { formatPrice } from "../lib/api";
 
 export default function CartDrawer() {
-  const { open, setOpen, items, removeItem, changeQty, subtotal } = useCart();
+  const { open, setOpen, items, removeItem, changeQty, subtotal } = useCartStore();
+  const navigate = useNavigate();
+  const dialogRef = useRef(null);
+
+  useEffect(() => {
+    const dialog = dialogRef.current;
+    if (!dialog) return;
+
+    if (open && !dialog.open) {
+      dialog.showModal();
+    } else if (!open && dialog.open) {
+      dialog.close();
+    }
+  }, [open]);
+
+  // Handle native escape key
+  useEffect(() => {
+    const dialog = dialogRef.current;
+    if (!dialog) return;
+    
+    const onCancel = (e) => {
+      e.preventDefault();
+      setOpen(false);
+    };
+    dialog.addEventListener("cancel", onCancel);
+    return () => dialog.removeEventListener("cancel", onCancel);
+  }, [setOpen]);
 
   return (
-    <AnimatePresence>
-      {open && (
-        <>
-          <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            onClick={() => setOpen(false)}
-            className="fixed inset-0 z-[60] bg-ink/40 backdrop-blur-sm"
-            data-testid="cart-overlay"
-          />
-          <motion.aside
-            data-testid="cart-drawer"
-            initial={{ x: "100%" }}
-            animate={{ x: 0 }}
-            exit={{ x: "100%" }}
-            transition={{ type: "tween", ease: [0.16, 1, 0.3, 1], duration: 0.5 }}
-            className="fixed right-0 top-0 z-[70] flex h-full w-full max-w-md flex-col border-l border-line bg-smoke"
-          >
+    <dialog
+      ref={dialogRef}
+      className="m-0 h-[100svh] max-h-none w-full max-w-md translate-x-full border-l border-line bg-smoke p-0 text-ink backdrop:bg-ink/40 backdrop:backdrop-blur-sm transition-transform duration-500 ease-[cubic-bezier(0.16,1,0.3,1)] open:translate-x-0 fixed right-0 left-auto"
+      onClick={(e) => {
+        if (e.target === dialogRef.current) setOpen(false);
+      }}
+    >
+      <div className="flex h-full w-full flex-col">
             <div className="flex items-center justify-between border-b border-line px-6 py-5">
               <span className="label">Your Bag ({items.length})</span>
               <button data-testid="cart-close" onClick={() => setOpen(false)} aria-label="Close">
@@ -106,18 +122,19 @@ export default function CartDrawer() {
                 <button
                   data-testid="checkout-btn"
                   className="label mt-5 w-full bg-ink py-4 text-smoke transition-colors hover:bg-[#262626]"
-                  onClick={() => alert("Razorpay checkout coming soon ✦")}
+                  onClick={() => {
+                    setOpen(false);
+                    navigate("/checkout");
+                  }}
                 >
                   Checkout · {formatPrice(subtotal)}
                 </button>
                 <p className="mt-3 text-center text-[0.62rem] uppercase tracking-[0.2em] text-ash">
-                  Secure payments · Razorpay (coming soon)
+                  Secure payments · Cashfree
                 </p>
               </div>
             )}
-          </motion.aside>
-        </>
-      )}
-    </AnimatePresence>
+      </div>
+    </dialog>
   );
 }

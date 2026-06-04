@@ -9,7 +9,7 @@ export default function ProductCard({ product, index = 0 }) {
       data-testid={`product-card-${product.slug}`}
       className="group block"
     >
-      <div className="relative aspect-[3/4] overflow-hidden bg-bone">
+      <div className="relative aspect-[3/4] overflow-hidden bg-bone" style={{ viewTransitionName: `product-${product.slug}` }}>
         <img
           src={product.images[0]}
           alt={product.name}

@@ -39,21 +39,18 @@ html.lenis, html.lenis body {
     color: var(--ink);
     font-family: "Manrope", sans-serif;
     overflow-x: hidden;
+    scrollbar-width: thin;
+    scrollbar-color: #0a0a0a #fafafa;
   }
   
   ::selection {
     background: #0a0a0a;
     color: #fafafa;
   }
-  
-  ::-webkit-scrollbar {
-    width: 9px;
-  }
-  ::-webkit-scrollbar-track {
-    background: #fafafa;
-  }
-  ::-webkit-scrollbar-thumb {
-    background: #0a0a0a;
+
+  ::view-transition-old(root),
+  ::view-transition-new(root) {
+    animation-duration: 0.5s;
   }
 }
 

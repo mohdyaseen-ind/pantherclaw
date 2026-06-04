@@ -3,6 +3,7 @@ import { Link } from "react-router-dom";
 import { motion, useScroll, useTransform } from "framer-motion";
 import Marquee from "../components/Marquee";
 import ProductCard from "../components/ProductCard";
+import { useProducts } from "../lib/api";
 
 const fadeUp = {
   hidden: { opacity: 0, y: 40 },
@@ -31,46 +32,15 @@ export default function Home() {
   const { scrollYProgress: quoteScroll } = useScroll({ target: quoteRef, offset: ["start end", "end start"] });
   const quoteY = useTransform(quoteScroll, [0, 1], ["-15%", "15%"]);
 
-  const featured = [
-    {
-      slug: "signature-baggy-light-wash",
-      name: "Signature Baggy",
-      subtitle: "Light Wash · Baggy Wide-Leg",
-      price: 4999,
-      images: ["/images/img3.jpeg", "/images/img4.jpeg"],
-      badge: "Bestseller"
-    },
-    {
-      slug: "obsidian-wide-leg",
-      name: "Obsidian Wide-Leg",
-      subtitle: "Faded Black · Baggy Wide-Leg",
-      price: 5499,
-      images: ["/images/img1.jpeg", "/images/img2.jpeg"],
-      badge: "New"
-    },
-    {
-      slug: "vintage-wash-skater",
-      name: "Vintage Skater",
-      subtitle: "Dirty Wash · Loose Skater",
-      price: 4299,
-      images: ["/images/img5.jpeg", "/images/img6.jpeg"]
-    },
-    {
-      slug: "midnight-baggy-mens",
-      name: "Midnight Baggy",
-      subtitle: "Carbon Black · Oversized Baggy",
-      price: 5999,
-      images: ["/images/img2.jpeg", "/images/img1.jpeg"],
-      badge: "Bestseller"
-    }
-  ];
+  const { data: allProducts, isLoading } = useProducts();
+  const featured = allProducts ? allProducts.slice(0, 4) : [];
 
   return (
     <div data-testid="home-page">
       {/* 1. Hero Section */}
       <section ref={heroRef} className="relative h-[100svh] w-full overflow-hidden bg-[#d8d8d8]">
         <motion.div style={{ y: heroY }} className="absolute inset-0 h-[120%] -top-[10%] w-full">
-          <img src="/images/img5.jpeg" alt="PantherClaw denim editorial" className="h-full w-full object-cover object-center" />
+          <img src="/images/img5.jpeg" alt="PantherClaw denim editorial" className="h-full w-full object-cover object-center" fetchpriority="high" />
         </motion.div>
         <div className="absolute inset-0 bg-gradient-to-t from-black/55 via-black/5 to-black/20"></div>
         <div className="relative z-10 mx-auto flex h-full max-w-[1600px] flex-col justify-end px-4 pb-16 sm:px-6 md:px-12 md:pb-24">
@@ -109,11 +79,17 @@ export default function Home() {
           <Link to="/shop" className="label link-underline self-start md:self-end">View All →</Link>
         </motion.div>
         <motion.div variants={staggerContainer} className="grid grid-cols-2 gap-x-4 gap-y-12 md:grid-cols-3 lg:grid-cols-4">
-          {featured.map((product) => (
-            <motion.div variants={fadeUp} key={product.slug}>
-              <ProductCard product={product} />
-            </motion.div>
-          ))}
+          {isLoading ? (
+            Array.from({ length: 4 }).map((_, i) => (
+              <div key={i} className="aspect-[3/4] w-full animate-pulse bg-line" />
+            ))
+          ) : (
+            featured.map((product) => (
+              <motion.div variants={fadeUp} key={product.slug}>
+                <ProductCard product={product} />
+              </motion.div>
+            ))
+          )}
         </motion.div>
       </motion.section>
 
@@ -121,7 +97,7 @@ export default function Home() {
       <section ref={editorialRef} className="grid md:grid-cols-2" data-testid="editorial-section">
         <div className="relative h-[60vh] overflow-hidden bg-bone md:h-[88vh]">
           <motion.div style={{ y: editorialY }} className="absolute inset-0 h-[130%] -top-[15%] w-full">
-            <img src="/images/img6.jpeg" alt="Lookbook" className="h-full w-full object-cover" />
+            <img src="/images/img6.jpeg" alt="Lookbook" className="h-full w-full object-cover" loading="lazy" />
           </motion.div>
         </div>
         <motion.div 
@@ -149,7 +125,7 @@ export default function Home() {
         <div className="grid gap-4 md:grid-cols-2">
           <motion.div variants={fadeUp}>
             <Link to="/shop?category=Women" data-testid="category-women" className="group relative block aspect-[4/5] overflow-hidden bg-bone md:aspect-[3/4]">
-              <img src="/images/img2.jpeg" alt="Women" className="img-zoom h-full w-full object-cover" />
+              <img src="/images/img2.jpeg" alt="Women" className="img-zoom h-full w-full object-cover" loading="lazy" />
               <div className="absolute inset-0 bg-gradient-to-t from-black/40 to-transparent"></div>
               <div className="absolute bottom-8 left-8 flex items-center gap-3 text-smoke">
                 <span className="display text-5xl md:text-6xl">Women</span>
@@ -162,7 +138,7 @@ export default function Home() {
           </motion.div>
           <motion.div variants={fadeUp}>
             <Link to="/shop?category=Men" data-testid="category-men" className="group relative block aspect-[4/5] overflow-hidden bg-bone md:aspect-[3/4]">
-              <img src="/images/img1.jpeg" alt="Men" className="img-zoom h-full w-full object-cover" />
+              <img src="/images/img1.jpeg" alt="Men" className="img-zoom h-full w-full object-cover" loading="lazy" />
               <div className="absolute inset-0 bg-gradient-to-t from-black/40 to-transparent"></div>
               <div className="absolute bottom-8 left-8 flex items-center gap-3 text-smoke">
                 <span className="display text-5xl md:text-6xl">Men</span>
@@ -179,7 +155,7 @@ export default function Home() {
       {/* 6. Quote Section */}
       <section ref={quoteRef} className="relative overflow-hidden h-[70vh]">
         <motion.div style={{ y: quoteY }} className="absolute inset-0 h-[130%] -top-[15%] w-full">
-          <img src="/images/img4.jpeg" alt="Editorial" className="h-full w-full object-cover" />
+          <img src="/images/img4.jpeg" alt="Editorial" className="h-full w-full object-cover" loading="lazy" />
         </motion.div>
         <div className="absolute inset-0 flex items-center justify-center bg-ink/30 px-6">
           <motion.h2 

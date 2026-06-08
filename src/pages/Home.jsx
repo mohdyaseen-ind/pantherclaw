@@ -40,14 +40,14 @@ export default function Home() {
       {/* 1. Hero Section */}
       <section ref={heroRef} className="relative h-[100svh] w-full overflow-hidden bg-[#d8d8d8]">
         <motion.div style={{ y: heroY }} className="absolute inset-0 h-[120%] -top-[10%] w-full">
-          <img src="/images/img5.jpeg" alt="PantherClaw denim editorial" className="h-full w-full object-cover object-center" fetchpriority="high" />
+          <img src="/images/image.png" alt="PantherClaw denim editorial" className="h-full w-full object-cover object-center" fetchpriority="high" />
         </motion.div>
         <div className="absolute inset-0 bg-gradient-to-t from-black/55 via-black/5 to-black/20"></div>
         <div className="relative z-10 mx-auto flex h-full max-w-[1600px] flex-col justify-end px-4 pb-16 sm:px-6 md:px-12 md:pb-24">
           <motion.p initial="hidden" animate="visible" variants={fadeUp} className="label text-smoke/80">Spring Drop 01 · 2026</motion.p>
-          <motion.h1 initial="hidden" animate="visible" variants={fadeUp} transition={{ delay: 0.1 }} className="display mt-4 max-w-5xl text-[3.4rem] text-smoke sm:text-7xl md:text-[7.5rem]">
+          {/* <motion.h1 initial="hidden" animate="visible" variants={fadeUp} transition={{ delay: 0.1 }} className="display mt-4 max-w-5xl text-[3.4rem] text-smoke sm:text-7xl md:text-[7.5rem]">
             Move different.<br />Wear wider.
-          </motion.h1>
+          </motion.h1> */}
           <motion.div initial="hidden" animate="visible" variants={fadeUp} transition={{ delay: 0.2 }} className="mt-8 flex flex-wrap items-center gap-4">
             <Link to="/shop" data-testid="hero-shop-btn" className="label bg-smoke px-9 py-4 text-ink transition-colors hover:bg-ink hover:text-smoke">
               Shop The Collection

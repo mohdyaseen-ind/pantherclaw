@@ -55,7 +55,7 @@ export default function Navbar() {
               key={l.label}
               to={l.to}
               data-testid={`nav-${l.label.toLowerCase().replace(/\\s/g, "-")}`}
-              className="label link-underline text-[0.66rem]"
+              className="label link-underline text-[0.66rem] text-white"
             >
               {l.label}
             </Link>
@@ -74,21 +74,21 @@ export default function Navbar() {
 
         {/* Logo */}
         <Link to="/" data-testid="brand-logo" className="flex-1 text-center">
-          <span className="display text-2xl tracking-tight md:text-[1.7rem]">PANTHERCLAW</span>
+          <span className="display text-2xl tracking-tight md:text-[1.7rem] text-white">PANTHERCLAW</span>
         </Link>
 
         {/* Right */}
         <div className="flex flex-1 items-center justify-end gap-5">
-          <button data-testid="search-btn" aria-label="Search" className="hidden sm:block">
+          <button data-testid="search-btn" aria-label="Search" className="hidden sm:block text-white">
             <Search size={19} strokeWidth={1.6} aria-hidden="true" />
           </button>
           
           {user ? (
-            <button onClick={signOut} aria-label="Sign Out" className="hidden sm:block hover:opacity-50">
+            <button onClick={signOut} aria-label="Sign Out" className="hidden sm:block hover:opacity-50 text-white">
               <User size={19} strokeWidth={1.6} aria-hidden="true" className="text-blue-500" />
             </button>
           ) : (
-            <button onClick={() => setAuthModalOpen(true)} aria-label="Sign In" className="hidden sm:block">
+            <button onClick={() => setAuthModalOpen(true)} aria-label="Sign In" className="hidden sm:block text-white">
               <User size={19} strokeWidth={1.6} aria-hidden="true" />
             </button>
           )}
@@ -96,7 +96,7 @@ export default function Navbar() {
           <button
             data-testid="cart-toggle"
             onClick={() => setOpen(true)}
-            className="relative"
+            className="relative text-white"
             aria-label="Cart"
           >
             <ShoppingBag size={19} strokeWidth={1.6} aria-hidden="true" />

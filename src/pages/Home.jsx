@@ -66,7 +66,7 @@ export default function Home() {
         <Link to="/shop?category=Men" className="group block cursor-pointer">
           <div className="w-full aspect-[3/4] overflow-hidden bg-[#111]">
             <img 
-              src="images/file_00000000bf1071fab1b130d10ce4bf49.png" 
+              src="images/Gemini_Generated_Image_evcefsevcefsevce-clean.png" 
               alt="Men" 
               className="w-full h-full object-cover" 
               loading="lazy" 

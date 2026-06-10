@@ -35,12 +35,12 @@ html.lenis, html.lenis body {
   
   body {
     margin: 0;
-    background: var(--smoke);
-    color: var(--ink);
+    background: #000000;
+    color: var(--smoke);
     font-family: "Manrope", sans-serif;
     overflow-x: hidden;
     scrollbar-width: thin;
-    scrollbar-color: #0a0a0a #fafafa;
+    scrollbar-color: #fafafa #000000;
   }
   
   ::selection {

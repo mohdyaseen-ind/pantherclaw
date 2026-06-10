@@ -44,7 +44,7 @@ export default function Navbar() {
     <header
       data-testid="main-navigation"
       className={`fixed inset-x-0 top-0 z-50 transition-all duration-500 ${
-        scrolled ? "bg-smoke/80 backdrop-blur-xl border-b border-black/5" : "bg-transparent"
+        scrolled ? "bg-black/80 backdrop-blur-xl border-b border-white/10" : "bg-transparent"
       }`}
     >
       <div className="mx-auto flex max-w-[1600px] items-center justify-between px-4 py-4 sm:px-6 md:px-12">
@@ -103,7 +103,7 @@ export default function Navbar() {
             {count > 0 && (
               <span
                 data-testid="cart-count"
-                className="absolute -right-2 -top-2 flex h-4 w-4 items-center justify-center rounded-full bg-ink text-[0.55rem] font-bold text-smoke"
+                className="absolute -right-2 -top-2 flex h-4 w-4 items-center justify-center rounded-full bg-white text-[0.55rem] font-bold text-black"
               >
                 {count}
               </span>
@@ -114,7 +114,7 @@ export default function Navbar() {
 
       {/* Mobile menu */}
       {menu && (
-        <div className="border-t border-black/5 bg-smoke px-6 py-6 md:hidden">
+        <div className="border-t border-white/10 bg-black px-6 py-6 md:hidden">
           {links.map((l) => (
             <Link
               key={l.label}
